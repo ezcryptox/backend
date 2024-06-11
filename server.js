@@ -20,6 +20,9 @@ app.use("/api/give-away", giveAway);
 app.use("/auth", Auth);
 app.use("/api/profile", Profile);
 
+app.get("/", (req, res)=>{
+    res.status(200).json({status: "Server is running smoothly"})
+})
 
 const dbUri = `mongodb://localhost:27017/ezcryptox`
 // const dbUri = `mongodb+srv://${dbHost}:${dbPass}@cluster0.xmpkpjc.mongodb.net/${dbCompany}?retryWrites=true&w=majority`
