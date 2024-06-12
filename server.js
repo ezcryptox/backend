@@ -24,8 +24,12 @@ app.get("/", (req, res)=>{
     res.status(200).json({status: "Server is running smoothly"})
 })
 
-const dbUri = `mongodb://localhost:27017/ezcryptox`
-// const dbUri = `mongodb+srv://${dbHost}:${dbPass}@cluster0.xmpkpjc.mongodb.net/${dbCompany}?retryWrites=true&w=majority`
+const dbHost = "highscoreteh"
+const dbPass = "eNiIQbm4ZMSor8VL"
+const dbCompany = "ezcryptox"
+
+// const dbUri = `mongodb://localhost:27017/ezcryptox`
+const dbUri = `mongodb+srv://${dbHost}:${dbPass}@cluster0.xmpkpjc.mongodb.net/${dbCompany}?retryWrites=true&w=majority`
 mongoose.connect(dbUri, { useNewUrlParser: true,  useUnifiedTopology: true })
     .then((result)=>  console.log('Database connected'))
     .catch((err)=> console.log(err))
