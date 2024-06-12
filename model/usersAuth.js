@@ -33,10 +33,6 @@ const Userschema = new schema({
         type: Boolean,
         required: true
     },
-    activity: {
-        type: Object,
-        required: true
-    },
     passkey: {
         type: Boolean,
         required: true

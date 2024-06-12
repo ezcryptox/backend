@@ -70,7 +70,6 @@ const handleCreateUserAuth = (async(req, res)=>{
           loginWithGoogle: false,
           email : auth.user?.resent.email,
           phone: "",
-          activity: auth.activity,
           passkey: false,
         })
 
