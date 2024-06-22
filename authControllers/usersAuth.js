@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 var bcrypt = require('bcryptjs');
 const validator = require('validator')
 const profileModel = require("../model/profile")
-const userAuth = require("../model/usersAuth")
+const UserAuth = require("../model/usersAuth")
 const { handleNodeMailer } = require("../emailConfig/config")
 const { randomUUID } = require("crypto");
 
@@ -19,7 +19,26 @@ const createToken = ((_id)=>{
 })
 
 const handleLoginAuth = (async(req, res)=>{
-
+    try{
+      const {auth} = req.body;
+      if(auth){
+        const user = await UserAuth.findOne({ email: auth?.email})
+        if (!user){
+          return  res.status(401).json("Email does not exist")
+        }
+        const match = await bcrypt.compare(auth?.password, user.password)
+        if(!match){
+          return res.status(404).json('Incorrect password')
+        }
+        const Token = createToken(user?.user_id);
+        res.status(200).json({Token, user})
+    }
+    }
+    catch(err){
+      console.log(err)
+      return  res.status(401).json("Server Error")
+     
+    }
 })
 
 
@@ -61,7 +80,7 @@ const handleCreateUserAuth = (async(req, res)=>{
         const salt = await bcrypt.genSalt(10)
         const hash = await bcrypt.hash(auth.user?.resent.password, salt)
         const Token = createToken(user_id)
-        await userAuth.create({
+        await UserAuth.create({
           user_id,
           password : hash,
           fa_auth : false,
@@ -79,10 +98,11 @@ const handleCreateUserAuth = (async(req, res)=>{
           email : auth.user?.resent.email,
           level : 1,
         })
-        res.status(200).json({Token, user: {user_id, email: auth.user?.resent.email }})
+        res.status(200).json({Token, user: { user_id, email: auth.user?.resent.email }})
       }
     }
 })
+
 
 
 module.exports = { handleLoginAuth, handleSignAuth , handleCreateUserAuth}

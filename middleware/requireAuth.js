@@ -5,7 +5,7 @@ const requireAuth = async (req, res, next) => {
   const SECRET = `InenwiNIWb39Nneol?s.mee39nshoosne(3n)`;
   const { authorization } = req.headers;
   if (!authorization) {
-    return res.status(401).json({ error: "Authorization token required" });
+    return res.status(401).json( "Authorization token required");
   } else {
     const token = authorization.split(" ")[1];
     try {
@@ -14,7 +14,7 @@ const requireAuth = async (req, res, next) => {
       req.id = user_id?.user_id
       next()
     } catch (error) {
-      res.status(404).json({ error: "Request not authorized" });
+      res.status(404).json( "Request not authorized");
     }
   }
 };
