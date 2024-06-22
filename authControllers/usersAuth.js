@@ -105,7 +105,7 @@ const handleCreateUserAuth = (async (req, res) => {
         email: auth.user?.resent.email,
         level: 1,
       })
-      res.status(200).json({ Token, user: { user_id, email: auth.user?.resent.email } })
+      res.status(200).json({ Token, user: {  user_id, email: auth.user?.resent.email } })
     }
   }
 })
