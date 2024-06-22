@@ -5,27 +5,27 @@ const Userschema = new schema({
     user_id: {
         type: String,
         required: true,
-        unique : true
+        unique: true
     },
-    password : {
+    password: {
         type: String,
         required: true
     },
-    email : {
+    email: {
         type: String,
     },
-    phone : {
+    phone: {
         type: String,
     },
-    fa_auth : {
+    fa_auth: {
         type: Boolean,
         required: true
     },
-    created_at : {
+    created_at: {
         type: Date,
         required: true
     },
-    lastLoginAt : {
+    lastLoginAt: {
         type: Date,
         required: true
     },
@@ -37,6 +37,22 @@ const Userschema = new schema({
         type: Boolean,
         required: true
     },
-}, { timestamp : true})
+
+    //  preciousken code snippet
+    refCode: {
+        type: String,
+        required: true,
+
+    },
+    QrCode_src: {
+        type: String,
+        required: true,
+    },
+    Invitees: {
+        type: Number,
+        required: true,
+        default: 0,
+    }
+}, { timestamp: true })
 
 module.exports = mongoose.model('userAuth', Userschema)
