@@ -45,7 +45,7 @@ const handleSignAuth = (async (req, res) => {
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(netToken, salt)
     await handleNodeMailer(auth?.email, netToken)
-    return res.status(200).json({ token: hash, email: `${auth?.email.slice(0, 3)}******${auth?.email.slice(-9)}`, resent: { password: auth?.password, email: auth?.email } })
+    return res.status(200).json({ token: hash, refCode: auth.refCode, email: `${auth?.email.slice(0, 3)}******${auth?.email.slice(-9)}`, resent: { password: auth?.password, email: auth?.email } })
   }
 })
 
@@ -72,16 +72,18 @@ const handleCreateUserAuth = (async (req, res) => {
       const refCode = await utils.handleCreateReferralToken();
       const QrCode_src = await utils.generateQRCode(refCode);
 
-      if (auth?.refCode) {
-        const refExist = userAuth.findOne({ refCode: auth?.refCode })
-        if (!refExist) return res.status(404).json({ status: false, message: 'Invalid Referral Code' })
+      if (auth?.user?.refCode) {
+        let refExist = await userAuth.findOne({ refCode: auth?.user?.refCode })
+        if (!refExist) {
+          return res.status(404).json({ status: false, message: 'Invalid Referral Code' })
+        } else {
+          refExist.Invitees = refExist.Invitees + 1
+          await refExist.save();
+        }
 
-        refExist.Invitees = refExist.Invitees + 1
-
-        await refExist.save();
         await refHistory.create({
           user_id,
-          refCode: auth?.refCode,
+          refCode: auth?.user?.refCode,
         })
       }
 
@@ -105,7 +107,7 @@ const handleCreateUserAuth = (async (req, res) => {
         email: auth.user?.resent.email,
         level: 1,
       })
-      res.status(200).json({ Token, user: {  user_id, email: auth.user?.resent.email } })
+      res.status(200).json({ Token, user: { user_id, QrCode_src, email: auth.user?.resent.email } })
     }
   }
 })
