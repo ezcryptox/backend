@@ -38,7 +38,6 @@ const Userschema = new schema({
         required: true
     },
 
-    //  preciousken code snippet
     refCode: {
         type: String,
         required: true,

@@ -51,8 +51,6 @@ const handleSignAuth = (async (req, res) => {
 
 const handleCreateUserAuth = (async (req, res) => {
   const { auth } = req.body
-
-  console.log("::: auth::", auth);
   if (auth) {
     const match = await bcrypt.compare(auth.code, auth?.user.token)
     if (!match) {
@@ -68,7 +66,6 @@ const handleCreateUserAuth = (async (req, res) => {
       const hash = await bcrypt.hash(auth.user?.resent.password, salt)
       const Token = createToken(user_id)
 
-      //  preciousken code snippet
       const refCode = await utils.handleCreateReferralToken();
       const QrCode_src = await utils.generateQRCode(refCode);
 
@@ -107,7 +104,7 @@ const handleCreateUserAuth = (async (req, res) => {
         email: auth.user?.resent.email,
         level: 1,
       })
-      res.status(200).json({ Token, user: { user_id, QrCode_src, email: auth.user?.resent.email } })
+      res.status(200).json({ Token, user: { user_id, QrCode_src,refCode, email: auth.user?.resent.email } })
     }
   }
 })
