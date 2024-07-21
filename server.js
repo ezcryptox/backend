@@ -10,6 +10,10 @@ require("dotenv").config();
 const giveAway = require("./routes/public_api")
 const Auth = require("./routes/auth")
 const Profile = require("./routes/profle")
+const notificationRoutes = require('./routes/notifications');
+const transactionRoutes = require('./routes/transaction');
+const cryptoAssetRoutes = require('./routes/cryptoasset');
+
 
 // ===================================================== APIs middlewares ===============================================================
 require("dotenv").config();
@@ -22,6 +26,9 @@ app.use(morgan("dev"))
 app.use("/api/give-away", giveAway);
 app.use("/auth", Auth);
 app.use("/api/profile", Profile);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/assets', cryptoAssetRoutes);
 
 app.get("/", (req, res) => {
     res.status(200).json({ status: "Server is running smoothly" })
@@ -31,8 +38,8 @@ const dbHost = "highscoreteh"
 const dbPass = "eNiIQbm4ZMSor8VL"
 const dbCompany = "ezcryptox"
 
-// const dbUri = `mongodb://localhost:27017/ezcryptox`
-const dbUri = `mongodb+srv://${dbHost}:${dbPass}@cluster0.xmpkpjc.mongodb.net/${dbCompany}?retryWrites=true&w=majority`
+const dbUri = `mongodb://127.0.0.1:27017/ezcryptox`
+// const dbUri = `mongodb+srv://${dbHost}:${dbPass}@cluster0.xmpkpjc.mongodb.net/${dbCompany}?retryWrites=true&w=majority`
 
 mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => console.log('Database connected'))
