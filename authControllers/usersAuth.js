@@ -23,8 +23,22 @@ const createToken = ((_id) => {
 })
 
 const handleLoginAuth = (async (req, res) => {
+  const { auth } = req.body;
+  if (!validator.isEmail(auth?.email)) {
+    return res.status(404).json("Email is not valid");
+  }
+  const user = await userAuth.findOne({ email: auth?.email });
+  if (!user) {
+    return res.status(404).json("User not found");
+  }
+  const isMatch = await bcrypt.compare(auth?.password, user.password);
+  if (!isMatch) {
+    return res.status(401).json("Incorrect password");
+  }
+  const Token = createToken(user.user_id);
+  res.status(200).json({ Token, user: { user_id: user.user_id, email: user.email } });
+});
 
-})
 
 
 const handleSignAuth = (async (req, res) => {
