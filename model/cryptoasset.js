@@ -34,6 +34,6 @@ const CryptoAssetSchema = new schema({
   },
 }, { timestamps: true });
 
-CryptoAssetSchema.plugin(AutoIncrement, { inc_field: 'id' });
+CryptoAssetSchema.plugin(AutoIncrement, { inc_field: 'id', id: 'crypto_asset_counter' });
 
 module.exports = mongoose.model('CryptoAsset', CryptoAssetSchema);

@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 const schema = mongoose.Schema;
 const BlogTagSchema = new schema({
-  id: {
-    type: Number,
-    unique: true,
-  },
   name: {
     type: String,
     required: true,
@@ -17,10 +13,6 @@ const BlogTagSchema = new schema({
 });
 
 const BlogSchema = new schema({
-  id: {
-    type: Number,
-    unique: true,
-  },
   inCarousel: {
     type: Boolean,
     default: false
@@ -49,17 +41,13 @@ const BlogSchema = new schema({
   }],
   slug: {
     type: String,
-    required: true
   },
   minutesToRead: {
     type: Number,
   },
   seo: [{
-    attributes: {
-      type: Object,
-    },
     content: {
-      type: String,
+      type: Object,
     },
     tag: {
       type: String,
@@ -67,8 +55,8 @@ const BlogSchema = new schema({
   }]
 }, { timestamps: true });
 
-BlogSchema.plugin(AutoIncrement, { inc_field: 'id' });
-BlogTagSchema.plugin(AutoIncrement, { inc_field: 'id' });
+BlogSchema.plugin(AutoIncrement, { inc_field: 'id', id: 'blog_counter' });
+BlogTagSchema.plugin(AutoIncrement, { inc_field: 'id', id: 'blog_tag_counter' });
 const Blog = mongoose.model('Blog', BlogSchema);
 const BlogTag = mongoose.model('BlogTag', BlogTagSchema);
 module.exports = { Blog, BlogTag };

@@ -4,11 +4,13 @@ async function getBlogs(req, res) {
   try {
     const { lastId, limit = 10 } = req.query; //
     const query = lastId ? { id: { $lt: lastId } } : {}; // Query for pagination
-    const allBlogPosts = await Blog.find(query).sort({ id: -1 }).limit(limit).lean(); // Fetch limited blog posts for loadMore
+    const allBlogPosts = await Blog.find(query).populate({
+      path: 'tags',
+    }).sort({ id: -1 }).limit(limit).lean(); // Fetch limited blog posts for loadMore
     res.json({
       ...(!!lastId ? {} : {
         blogCarousel: {
-          blogPost: await Blog.findOne({ inCarousel: true }).sort({ id: -1 }).lean()
+          blogPost: await Blog.findOne({ inCarousel: true }).populate('tags').sort({ id: -1 }).lean()
         }
       }),
       allBlogPosts: allBlogPosts // Return all blog posts
@@ -35,13 +37,15 @@ async function blogDetail(req, res) {
 async function searchBlogs(req, res) {
   try {
     const query = decodeURIComponent(req.params.query);
+    const tags = await BlogTag.find({ name: new RegExp(query, 'i') });
+    const tagIds = tags.map(tag => tag._id);
     const searchResults = await Blog.find({
       $or: [
         { title: { $regex: query, $options: 'i' } },
         { excerpt: { $regex: query, $options: 'i' } },
-        { 'tags.name': { $regex: query, $options: 'i' } }
+        { tags: { $in:  tagIds } }
       ]
-    }).lean();
+    }).populate('tags').lean();
 
     res.json({
       blogPosts: searchResults
@@ -66,7 +70,7 @@ async function insertTags() {
   ];
 
   const tagDocuments = tags.map(tag => ({ name: tag, slug: tag.toLocaleLowerCase().replace(/\s/g, "-") }));
-  const newTags = await BlogTag.insertMany(tagDocuments); e
+  const newTags = await BlogTag.create(tagDocuments);
   const tagIds = newTags.map(tag => tag._id);
   return tagIds;
 }
@@ -209,7 +213,7 @@ async function insertDummyBlogPosts() {
     },
   ];
 
-  await Blog.insertMany(dummyPosts)
+  await Blog.create(dummyPosts)
 }
 // ... existing code ...
 module.exports = {

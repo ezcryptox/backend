@@ -13,6 +13,8 @@ const Profile = require("./routes/profle")
 const notificationRoutes = require('./routes/notifications');
 const transactionRoutes = require('./routes/transaction');
 const cryptoAssetRoutes = require('./routes/cryptoasset');
+const blogRoutes = require('./routes/blog');
+const articleRoutes = require('./routes/article');
 
 
 // ===================================================== APIs middlewares ===============================================================
@@ -29,6 +31,8 @@ app.use("/api/profile", Profile);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/assets', cryptoAssetRoutes);
+app.use('/api/blog', blogRoutes);
+app.use('/api/article', articleRoutes);
 
 app.get("/", (req, res) => {
     res.status(200).json({ status: "Server is running smoothly" })

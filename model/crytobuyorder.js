@@ -23,7 +23,7 @@ const CryptoBuyOrderSchema = new schema({
     required: true
   },
   fiatAmount: {
-    type: Amount,
+    type: Number,
   },
   cryptoAmount: {
     type: Number,
@@ -44,6 +44,6 @@ const CryptoBuyOrderSchema = new schema({
   }
 }, { timestamps: true });
 
-CryptoBuyOrderSchema.plugin(AutoIncrement, { inc_field: 'id' });
+CryptoBuyOrderSchema.plugin(AutoIncrement, { inc_field: 'id', id: 'crypto_buy_counter' });
 
 module.exports = mongoose.model('CryptoBuyOrder', CryptoBuyOrderSchema);

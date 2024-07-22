@@ -5,10 +5,10 @@ const requireAuth = require('../middleware/requireAuth')
 
 router.post('/:id/praise', requireAuth, toggleArticlePraise);
 router.get('/:id', articleDetail);
-router.get('list', getArticles);
+router.get('/list', getArticles);
 
 //TODO: Remove dummy function
-router.post('dummy-articles', async (req, res) => {
+router.post('/dummy-articles', async (req, res) => {
   try {
     await insertDummyArticles();
     res.json("success")

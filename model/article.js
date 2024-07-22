@@ -36,6 +36,6 @@ const ArticleSchema = new schema({
   }
 }, { timestamps: true });
 
-ArticleSchema.plugin(AutoIncrement, { inc_field: 'id' });
+ArticleSchema.plugin(AutoIncrement, { inc_field: 'id', id: 'article_counter' });
 
 module.exports = mongoose.model('Article', ArticleSchema);

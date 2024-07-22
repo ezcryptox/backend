@@ -118,7 +118,7 @@ const generateDummyArticles = () => {
 
 const insertDummyArticles = async () => {
   try {
-    await mongoose.model('Article').insertMany(generateDummyArticles);
+    await Article.create(generateDummyArticles());
     console.log("Dummy articles inserted successfully.");
   } catch (error) {
     console.error("Error inserting dummy articles:", error);

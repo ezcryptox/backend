@@ -52,9 +52,7 @@ async function listCurrencies(req, res) {
 
         if (item.type === 'fiat') {
           fiatCurrencies.push({
-            label: item.code,
-            icon: icon,
-            precision: item.precision,
+            ...commonFields,
             minBuyAmount: item.minBuyAmount,
             maxBuyAmount: item.maxBuyAmount,
           });
@@ -73,20 +71,122 @@ async function listCurrencies(req, res) {
 
     res.status(200).json(result);
   } catch (error) {
-    console.error('Error fetching user notifications:', error);
+    console.error('Error fetching currency list:', error);
 
     if (DEBUG) {
-
+      return res.status(200).json({
+        fiatCurrencies: [
+          { icon: 'https://www.datocms-assets.com/51952/1665712815-eth-1.png', label: 'USD' },
+          { icon: 'https://www.datocms-assets.com/51952/1719830613-caduceus-cad.png', label: 'CAD' },
+          { icon: 'https://www.datocms-assets.com/51952/1678696398-jpy.png', label: 'JPY' },
+          { icon: 'https://www.datocms-assets.com/51952/1678699269-gbp.png', label: 'GBP' },
+          { icon: 'https://www.datocms-assets.com/51952/1678696052-try.png', label: 'TRY' },
+          { icon: 'https://www.datocms-assets.com/51952/1679998690-ils.png', label: 'ILS' },
+          { icon: 'https://www.datocms-assets.com/51952/1680075871-taegeuk-svg.png', label: 'KRW' },
+          { icon: 'https://www.datocms-assets.com/51952/1678697012-pln.png', label: 'PLN' },
+          { icon: 'https://www.datocms-assets.com/51952/1678358356-chf.png', label: 'CHF' },
+          { icon: 'https://www.datocms-assets.com/51952/1679366158-nok.png', label: 'NOK' },
+          { icon: 'https://www.datocms-assets.com/51952/1678441917-dkk.png', label: 'DKK' },
+          { icon: 'https://www.datocms-assets.com/51952/1678696267-sek.png', label: 'SEK' },
+          { icon: 'https://www.datocms-assets.com/51952/1678696622-aud.png', label: 'AUD' },
+          { icon: 'https://www.datocms-assets.com/51952/1678441826-zar.png', label: 'ZAR' },
+          { icon: 'https://www.datocms-assets.com/51952/1678699329-czk.png', label: 'CZK' },
+          { icon: 'https://www.datocms-assets.com/51952/1678441953-nzd.png', label: 'NZD' },
+          { icon: 'https://www.datocms-assets.com/51952/1678696305-huf.png', label: 'HUF' },
+          { icon: 'https://www.datocms-assets.com/51952/1678352873-inr.png', label: 'INR' },
+          { icon: 'https://www.datocms-assets.com/51952/1678441441-uah.png', label: 'UAH' },
+          { icon: 'https://www.datocms-assets.com/51952/1678699172-hkd.png', label: 'HKD' },
+          { icon: 'https://www.datocms-assets.com/51952/1680056429-myr.png', label: 'MYR' },
+          { icon: 'https://www.datocms-assets.com/51952/1678441266-ngn.png', label: 'NGN' },
+          { icon: 'https://www.datocms-assets.com/51952/1680057413-sgd.png', label: 'SGD' },
+          { icon: 'https://www.datocms-assets.com/51952/1678441536-twd.png', label: 'TWD' },
+          { icon: 'https://www.datocms-assets.com/51952/1678441580-bgn.png', label: 'BGN' },
+          { icon: 'https://www.datocms-assets.com/51952/1678358220-brl.png', label: 'BRL' },
+          { icon: 'https://www.datocms-assets.com/51952/1678442040-mad.png', label: 'MAD' },
+          { icon: 'https://www.datocms-assets.com/51952/1678696733-ron.png', label: 'RON' },
+          { icon: 'https://www.datocms-assets.com/51952/1678696224-mxn.png', label: 'MXN' },
+          { icon: 'https://www.datocms-assets.com/51952/1678696426-aed.png', label: 'AED' },
+          { icon: 'https://www.datocms-assets.com/51952/1678699221-vnd.png', label: 'VND' },
+          { icon: 'https://www.datocms-assets.com/51952/1678442008-kzt.png', label: 'KZT' },
+          { icon: 'https://www.datocms-assets.com/51952/1678441360-php.png', label: 'PHP' },
+          { icon: 'https://www.datocms-assets.com/51952/1679998311-dop.png', label: 'DOP' },
+          { icon: 'https://www.datocms-assets.com/51952/1678358270-pen.png', label: 'PEN' },
+          { icon: 'https://www.datocms-assets.com/51952/1678441719-cop.png', label: 'COP' },
+          { icon: 'https://www.datocms-assets.com/51952/1680055939-mdl.png', label: 'MDL' },
+          { icon: 'https://www.datocms-assets.com/51952/1680057226-qar.png', label: 'QAR' },
+          { icon: 'https://www.datocms-assets.com/51952/1679998384-gel.png', label: 'GEL' },
+          { icon: 'https://www.datocms-assets.com/51952/1680057551-uyu.png', label: 'UYU' },
+          { icon: 'https://www.datocms-assets.com/51952/1679998102-clp.png', label: 'CLP' },
+          { icon: 'https://www.datocms-assets.com/51952/1679998162-crc.png', label: 'CRC' },
+          { icon: 'https://www.datocms-assets.com/51952/1680056956-nad.png', label: 'NAD' },
+          { icon: 'https://www.datocms-assets.com/51952/1679997729-azn.png', label: 'AZN' },
+          { icon: 'https://www.datocms-assets.com/51952/1678255416-eur.png', label: 'EUR' },
+          { icon: 'https://www.datocms-assets.com/51952/1678696767-idr.png', label: 'IDR' },
+          { icon: 'https://www.datocms-assets.com/51952/1678441640-sar.png', label: 'SAR' },
+          { icon: '', label: 'LKR' },
+          { icon: 'https://www.datocms-assets.com/51952/1682675727-bob-logo-copy.png', label: 'BOB' },
+          { icon: 'https://www.datocms-assets.com/51952/1678441327-cny.png', label: 'CNY' },
+          { icon: 'https://www.datocms-assets.com/51952/1679997546-all.png', label: 'ALL' },
+          { icon: 'https://www.datocms-assets.com/51952/1679366401-ang.png', label: 'ANG' },
+          { icon: 'https://www.datocms-assets.com/51952/1679997849-bbd.png', label: 'BBD' },
+          { icon: 'https://www.datocms-assets.com/51952/1678696132-bdt.png', label: 'BDT' },
+          { icon: 'https://www.datocms-assets.com/51952/1679997913-bmd.png', label: 'BMD' },
+          { icon: 'https://www.datocms-assets.com/51952/1679997972-bnd.png', label: 'BND' },
+          { icon: 'https://www.datocms-assets.com/51952/1679998042-bwp.png', label: 'BWP' },
+          { icon: 'https://www.datocms-assets.com/51952/1679998224-djf.png', label: 'DJF' },
+          { icon: 'https://www.datocms-assets.com/51952/1678696654-egp.png', label: 'EGP' },
+          { icon: 'https://www.datocms-assets.com/51952/1680075554-ghs.png', label: 'GHS' },
+          { icon: 'https://www.datocms-assets.com/51952/1679998593-gtq.png', label: 'GTQ' },
+          { icon: 'https://www.datocms-assets.com/51952/1680057479-tzs.png', label: 'TZS' },
+          { icon: 'https://www.datocms-assets.com/51952/1678441776-ugx.png', label: 'UGX' },
+          { icon: 'https://www.datocms-assets.com/51952/1680057607-xof.png', label: 'XOF' },
+          { icon: 'https://www.datocms-assets.com/51952/1679999012-kgs.png', label: 'KGS' },
+          { icon: 'https://www.datocms-assets.com/51952/1680056737-mzn.png', label: 'MZN' },
+          { icon: 'https://www.datocms-assets.com/51952/1683700191-bam-logo.webp', label: 'BAM' },
+          { icon: 'https://www.datocms-assets.com/51952/1678696688-mnt.png', label: 'MNT' },
+          { icon: 'https://www.datocms-assets.com/51952/1679997634-amd.png', label: 'AMD' },
+          { icon: 'https://www.datocms-assets.com/51952/1679999614-khr.png', label: 'KHR' },
+          { icon: 'https://www.datocms-assets.com/51952/1679999707-kyd.png', label: 'KYD' },
+          { icon: 'https://www.datocms-assets.com/51952/1680055660-lbp.png', label: 'LBP' },
+          { icon: 'https://www.datocms-assets.com/51952/1680057041-pab.png', label: 'PAB' },
+          { icon: 'https://www.datocms-assets.com/51952/1680057111-pgk.png', label: 'PGK' },
+          { icon: 'https://www.datocms-assets.com/51952/1680057166-pyg.png', label: 'PYG' },
+          { icon: 'https://www.datocms-assets.com/51952/1678358881-kes.png', label: 'KES' },
+          { icon: '', label: 'RSD' },
+          { icon: 'https://www.datocms-assets.com/51952/1640575838-sos.png', label: 'SOS' },
+          { icon: 'https://www.datocms-assets.com/51952/1678695923-thb.png', label: 'THB' },
+          { icon: 'https://www.datocms-assets.com/51952/1680056179-mop.png', label: 'MOP' },
+          { icon: 'https://www.datocms-assets.com/51952/1680056299-mur.png', label: 'MUR' },
+          { icon: 'https://www.datocms-assets.com/51952/1679998812-isk.png', label: 'ISK' },
+          { icon: 'https://www.datocms-assets.com/51952/1679998874-jmd.png', label: 'JMD' },
+          { icon: 'https://www.datocms-assets.com/51952/1680056060-mkd.png', label: 'MKD' },
+          { icon: 'https://www.datocms-assets.com/51952/1679562879-bhd.png', label: 'BHD' },
+          { icon: 'https://www.datocms-assets.com/51952/1679366230-iqd.png', label: 'IQD' },
+          { icon: 'https://www.datocms-assets.com/51952/1679366306-jod.png', label: 'JOD' },
+          { icon: 'https://www.datocms-assets.com/51952/1679562901-kwd.png', label: 'KWD' },
+          { icon: 'https://www.datocms-assets.com/51952/1679562919-omr.png', label: 'OMR' },
+        ].map(f => ({ ...f, code: f.label, minBuyAmount: 10, maxBuyAmount: 100, precision: 4})),
+        cryptoCurrencies: [
+          { icon: 'https://www.datocms-assets.com/51952/1635193869-btc.png', label: 'BTC' },
+          { icon: 'https://www.datocms-assets.com/51952/1635345356-eth.png', label: 'ETH' },
+          { icon: 'https://www.datocms-assets.com/51952/1635345330-ltc.png', label: 'LTC' },
+          { icon: 'https://www.datocms-assets.com/51952/1638549830-trx.png', label: 'TRX' },
+          { icon: 'https://www.datocms-assets.com/51952/1635446602-usdc.png', label: 'USDC' },
+          { icon: 'https://www.datocms-assets.com/51952/1638913308-usdt.png', label: 'USDT' },
+          { icon: 'https://www.datocms-assets.com/51952/1639014471-xrp.png', label: 'XRP' }
+        ].map(f => ({ ...f, code: f.label, precision: 4 })),
+      })
     }
 
-    res.status(500).json({ message: 'Error fetching user notifications' });
+    res.status(500).json({ message: 'Error fetching currencies' });
   }
 }
 
 async function getRate(req, res) {
+  const { crypto: cryptoCurr, fiat, amount } = req.query;
   try {
 
-    const { crypto: cryptoCurr, fiat, amount } = req.query;
+    
     const options = {
       method: 'GET',
       url: `https://api.moonpay.com/v3/currencies/${cryptoCurr.toLowerCase()}/buy_quote?baseCurrencyAmount=${amount}&baseCurrencyCode=${fiat}&areFeesIncluded=true&apiKey=${MOONPAY_API_KEY}`,
@@ -94,7 +194,7 @@ async function getRate(req, res) {
     };
 
     
-    const data = (axios.request(options)).data;
+    const data = (await axios.request(options)).data;
 
     res.status(200).json({
       code: 200,
@@ -118,7 +218,7 @@ async function getRate(req, res) {
         data: {
           price: 1,
           fiatAmount: amount,
-          cryptoAmount: data.quoteCurrencyAmount,
+          cryptoAmount: 0.56600,
           fiatCurrency: fiat,
           cryptoCurrency: cryptoCurr,
           totalFee: 3.99,

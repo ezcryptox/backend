@@ -39,6 +39,6 @@ const NotificationSchema = new schema({
   }
 }, { timestamps: true });
 
-NotificationSchema.plugin(AutoIncrement, { inc_field: 'id' });
+NotificationSchema.plugin(AutoIncrement, { inc_field: 'id', id: 'notification_counter' });
 
 module.exports = mongoose.model('Notification', NotificationSchema);

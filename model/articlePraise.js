@@ -13,6 +13,6 @@ const ArticlePraiseSchema = new schema({
   },
 }, { timestamps: true });
 
-ArticlePraiseSchema.plugin(AutoIncrement, { inc_field: 'id' });
+ArticlePraiseSchema.plugin(AutoIncrement, { inc_field: 'id', id: 'article_praise_counter' });
 
 module.exports = mongoose.model('ArticlePraise', ArticlePraiseSchema);

@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@api/tatumdocs": "file:.api/apis/tatumdocs",
     "@circle-fin/developer-controlled-wallets": "^4.1.1",
     "@circle-fin/smart-contract-platform": "^4.1.1",
     "@circle-fin/user-controlled-wallets": "^4.1.1",
