@@ -42,8 +42,8 @@ const dbHost = "highscoreteh"
 const dbPass = "eNiIQbm4ZMSor8VL"
 const dbCompany = "ezcryptox"
 
-const dbUri = `mongodb://127.0.0.1:27017/ezcryptox`
-// const dbUri = `mongodb+srv://${dbHost}:${dbPass}@cluster0.xmpkpjc.mongodb.net/${dbCompany}?retryWrites=true&w=majority`
+// const dbUri = `mongodb://127.0.0.1:27017/ezcryptox`
+const dbUri = `mongodb+srv://${dbHost}:${dbPass}@cluster0.xmpkpjc.mongodb.net/${dbCompany}?retryWrites=true&w=majority`
 
 mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => console.log('Database connected'))
