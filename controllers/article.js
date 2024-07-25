@@ -11,7 +11,7 @@ async function getArticles(req, res) {
       .select(type === 'article' ? '-content' : '')
       .limit(limit * 1)
       .skip((page - 1) * limit)
-      .exec();
+      .lean();
     const count = await Article.countDocuments(query);
     res.json({
       articles,

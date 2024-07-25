@@ -10,7 +10,7 @@ async function getWalletAddressForAsset(crypto, user_id) {
   // Check if the wallet address exists in the CryptoAsset collection
   let asset = await CryptoAsset.findOne({ user_id: user_id, currencyCode: crypto });
   if (asset) {
-    return asset.depositAddress;
+    return { address: asset.depositAddress, tag: asset.walletAddressTag || "" };
   }
 
 
@@ -41,7 +41,7 @@ async function getWalletAddressForAsset(crypto, user_id) {
       throw new Error(`Unsupported cryptocurrency: ${crypto}`);
   }
 
-  return asset.depositAddress;
+  return { address: asset.depositAddress, tag: asset.walletAddressTag || ""};
   
 }
 
@@ -179,7 +179,7 @@ async function createXRPWallet(user_id) {
     customer: { accountingCurrency: 'USD', externalId: user_id },
     currency: 'XRP',
   });
-  await tatumdocs.assignAddress({
+  const {destinationTag} = await tatumdocs.assignAddress({
     index: 1,
     id: tatumAccount.id,
     address: walletAddress
@@ -191,6 +191,7 @@ async function createXRPWallet(user_id) {
     walletAddress,
     privateKey,
     depositAddress: walletAddress,
+    walletAddressTag: destinationTag,
   };
   const asset = new CryptoAsset(assetData);
   await asset.save();
@@ -200,8 +201,8 @@ async function createXRPWallet(user_id) {
 async function getWalletAddress(req, res) {
   try {
     const { crypto } = req.query;
-    const address = await getWalletAddressForAsset(crypto, req.id)
-    return res.status(200).json({address})
+    const {address, tag} = await getWalletAddressForAsset(crypto, req.id)
+    return res.status(200).json({address, tag})
   } catch (error) {
     console.error('Error getting buy list:', error);
     res.status(500).json({ message: 'Error fetching buy list' });

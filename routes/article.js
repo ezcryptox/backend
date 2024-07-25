@@ -3,8 +3,8 @@ const router = express.Router();
 const { getArticles, insertDummyArticles, articleDetail, toggleArticlePraise } = require('../controllers/article');
 const requireAuth = require('../middleware/requireAuth')
 
-router.post('/:id/praise', requireAuth, toggleArticlePraise);
-router.get('/:id', articleDetail);
+router.post('/praise/:id', requireAuth, toggleArticlePraise);
+router.get('/detail/:id', articleDetail);
 router.get('/list', getArticles);
 
 //TODO: Remove dummy function

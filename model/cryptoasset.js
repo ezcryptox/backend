@@ -32,6 +32,9 @@ const CryptoAssetSchema = new schema({
     type: String,
     required: true
   },
+  walletAddressTag: {
+    type: String,
+  }
 }, { timestamps: true });
 
 CryptoAssetSchema.plugin(AutoIncrement, { inc_field: 'id', id: 'crypto_asset_counter' });
