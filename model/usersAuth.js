@@ -51,6 +51,10 @@ const Userschema = new schema({
         type: Number,
         required: true,
         default: 0,
+    },
+    referralEarnings: {
+        type: Number,
+        default: 0,
     }
 }, { timestamp: true })
 

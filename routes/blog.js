@@ -4,7 +4,7 @@ const { searchBlogs, getBlogs, blogDetail, insertDummyBlogPosts } = require('../
 
 
 router.get('/list', getBlogs);
-router.get('/:id', blogDetail);
+router.get('/detail/:id', blogDetail);
 router.get('/search/:query', searchBlogs);
 
 //TODO: Remove dummy function

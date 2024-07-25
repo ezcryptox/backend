@@ -9,7 +9,6 @@ const refHistorySchema = new schema({
     },
     refCode: {
         type: String,
-
     },
 }, { timestamp: true })
 
