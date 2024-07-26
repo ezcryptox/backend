@@ -133,7 +133,10 @@ async function createWallet(user_id, currency, generateWalletFn, generateAddress
     }).catch(err => {
     console.log("Error generating dp address ", err);
     throw err;
-  });;
+    });
+  const chain = currency === 'USDC' || currency === 'USDT' ? 'ETH' : currency
+  const eventID = await registerEvent(depositAddress, chain);
+  
   const assetData = {
     tatumAccountID: tatumAccount.id,
     currencyCode: currency,
@@ -141,7 +144,8 @@ async function createWallet(user_id, currency, generateWalletFn, generateAddress
     walletAddress,
     privateKey,
     depositAddress,
-    mnemonic
+    mnemonic,
+    eventID
   };
   const asset = new CryptoAsset(assetData);
   await asset.save();
@@ -184,6 +188,7 @@ async function createXRPWallet(user_id) {
     id: tatumAccount.id,
     address: walletAddress
   });
+  const eventID = await registerEvent(walletAddress, 'XRP');
   const assetData = {
     tatumAccountID: tatumAccount.id,
     currencyCode: 'XRP',
@@ -192,6 +197,7 @@ async function createXRPWallet(user_id) {
     privateKey,
     depositAddress: walletAddress,
     walletAddressTag: destinationTag,
+    eventID
   };
   const asset = new CryptoAsset(assetData);
   await asset.save();
@@ -210,11 +216,11 @@ async function getWalletAddress(req, res) {
 }
 
 function validateTatumSignature(req) {
-  const signature = req.headers['x-tatum-signature'];
+  const signature = req.headers['x-payload-hash'];
   const payload = JSON.stringify(req.body);
-  const hmac = crypto.createHmac('sha256', TATUM_WEBHOOK_SECRET);
+  const hmac = crypto.createHmac('sha512', process.env.TATUM_WEBHOOK_SECRET);
   hmac.update(payload);
-  const digest = hmac.digest('hex');
+  const digest = hmac.digest('base64');
   return signature === digest;
 }
 
@@ -223,16 +229,25 @@ async function tatumWebHook(req, res) {
   if (!validateTatumSignature(req)) {
     return res.status(401).send('Invalid signature');
   }
-  const { type, data } = req.body;
+  const { address: depositAddress, subscriptionType, asset: currencyCode } = req.body;
 
   try {
-    if (type === 'account.deposit' || type === 'account.withdrawal') {
-      const { accountId, currency, availableBalance } = data;
+    if (subscriptionType === "ADDRESS_EVENT"){
 
       // Find the corresponding CryptoAsset
-      const asset = await CryptoAsset.findOne({ tatumAccountID: accountId, currencyCode: currency.toUpperCase() });
+      const asset = await CryptoAsset.findOne({ currencyCode, depositAddress});
       if (asset) {
         // Update the balance
+        const options = {
+          method: 'GET',
+          url: `https://api.tatum.io/v3/ledger/account/${asset.tatumAccountID}/balance`,
+          headers: {
+            accept: 'application/json',
+            'x-api-key': process.env.TATUM_API_KEY
+          }
+        };
+
+        const { availableBalance } = (await axios.request(options)).data;
         asset.balance = availableBalance;
         await asset.save();
       }
@@ -245,7 +260,43 @@ async function tatumWebHook(req, res) {
   }
 }
 
+async function registerEvent(address, chain) {
+  const options = {
+    method: 'POST',
+    url: 'https://api.tatum.io/v4/subscription',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      'x-api-key': process.env.TATUM_API_KEY
+    },
+    data: {
+      type: 'ADDRESS_EVENT', attr: {
+        chain, address,
+        url: process.env.APP_BASE_URL } }
+  };
+
+  const {id} = (await axios.request(options)).data
+  return id;
+}
+
+async function signWebHook() {
+  const options = {
+    method: 'PUT',
+    url: 'https://api.tatum.io/v3/subscription',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      'x-api-key': process.env.TATUM_API_KEY
+    },
+    data: { hmacSecret: process.env.TATUM_WEBHOOK_SECRET }
+  };
+
+  await axios.request(options)
+}
+
+
 module.exports = {
   getWalletAddress,
-  tatumWebHook
+  tatumWebHook,
+  signWebHook
 };

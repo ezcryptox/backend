@@ -34,6 +34,9 @@ const CryptoAssetSchema = new schema({
   },
   walletAddressTag: {
     type: String,
+  },
+  eventID: {
+    type: String
   }
 }, { timestamps: true });
 
