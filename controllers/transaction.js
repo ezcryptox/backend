@@ -240,7 +240,7 @@ async function moonPayWebHook(req, res) {
 
     const signedPayload = `${timestamp}.${JSON.stringify(req.body)}`;
     const expectedSignature = crypto
-      .createHmac('sha256', process.env.MOONPAY_PUBLIC_KEY)
+      .createHmac('sha256', process.env.MOONPAY_SECRET_KEY)
       .update(signedPayload)
       .digest('hex');
 
