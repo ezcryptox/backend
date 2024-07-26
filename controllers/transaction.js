@@ -53,7 +53,7 @@ async function listCurrencies(req, res) {
             minBuyAmount: item.minBuyAmount,
             maxBuyAmount: item.maxBuyAmount,
           });
-        } else if (item.type === 'crypto') {
+        } else if (item.type === 'crypto' && ['BTC', 'ETH', 'USDC', 'USDT', 'TRX', 'XRP', 'LTC'].includes(commonFields.code)) {
           cryptoCurrencies.push(commonFields);
         }
       });
