@@ -3,7 +3,7 @@
 const CryptoAsset = require('../model/cryptoasset');
 const tatumdocs = require('@api/tatumdocs');
 const axios = require('axios');
-const { TATUM_API_KEY, TATUM_WEBHOOK_SECRET, APP_BASE_URL } = require('../utils/env');
+const { TATUM_API_KEY, TATUM_WEBHOOK_SECRET, ASSET_WEBHOOK_URL } = require('../utils/env');
 tatumdocs.auth(TATUM_API_KEY);
 async function getWalletAddressForAsset(crypto, user_id) {
   // Check if the wallet address exists in the CryptoAsset collection
@@ -271,7 +271,7 @@ async function registerEvent(address, chain) {
     data: {
       type: 'ADDRESS_EVENT', attr: {
         chain, address,
-        url: APP_BASE_URL } }
+        url: ASSET_WEBHOOK_URL } }
   };
 
   const {id} = (await axios.request(options)).data

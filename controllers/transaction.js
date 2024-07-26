@@ -222,7 +222,7 @@ async function getRate(req, res) {
         }
       });
     } else {
-      res.status(500).json({ message: 'Error fetching user notifications' });
+      res.status(500).json({ message: 'Error getting buy quotes' });
     }
    
   }
