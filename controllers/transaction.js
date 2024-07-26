@@ -1,5 +1,6 @@
 const axios = require('axios');
 const crypto = require('crypto');
+const {MOONPAY_PUBLIC_KEY, MOONPAY_SECRET_KEY} = require('../utils/env')
 const CryptoBuyOrder = require('../model/crytobuyorder');
 const DEBUG = false;
 const ICONS = {
@@ -14,7 +15,7 @@ async function signUrl(req, res) {
     const originalUrl = req.body.urlForSignature;
 
     const signature = crypto
-      .createHmac('sha256', process.env.MOONPAY_SECRET_KEY )
+      .createHmac('sha256', MOONPAY_SECRET_KEY )
       .update(new URL(originalUrl).search)
       .digest('base64');
     res.status(200).json({signature});
@@ -29,7 +30,7 @@ async function listCurrencies(req, res) {
 
     const options = {
       method: 'GET',
-      url: `https://api.moonpay.com/v3/currencies?apiKey=${process.env.MOONPAY_PUBLIC_KEY}`,
+      url: `https://api.moonpay.com/v3/currencies?apiKey=${MOONPAY_PUBLIC_KEY}`,
       headers: { accept: 'application/json' }
     };
     const data = (await axios.request(options)).data;
@@ -185,7 +186,7 @@ async function getRate(req, res) {
     
     const options = {
       method: 'GET',
-      url: `https://api.moonpay.com/v3/currencies/${cryptoCurr.toLowerCase()}/buy_quote?baseCurrencyAmount=${amount}&baseCurrencyCode=${fiat}&areFeesIncluded=true&apiKey=${process.env.MOONPAY_PUBLIC_KEY}`,
+      url: `https://api.moonpay.com/v3/currencies/${cryptoCurr.toLowerCase()}/buy_quote?baseCurrencyAmount=${amount}&baseCurrencyCode=${fiat}&areFeesIncluded=true&apiKey=${MOONPAY_PUBLIC_KEY}`,
       headers: { accept: 'application/json' }
     };
 
@@ -240,7 +241,7 @@ async function moonPayWebHook(req, res) {
 
     const signedPayload = `${timestamp}.${JSON.stringify(req.body)}`;
     const expectedSignature = crypto
-      .createHmac('sha256', process.env.MOONPAY_SECRET_KEY)
+      .createHmac('sha256', MOONPAY_SECRET_KEY)
       .update(signedPayload)
       .digest('hex');
 
@@ -284,7 +285,7 @@ async function moonPayWebHook(req, res) {
     } else {
       const options = {
         method: 'GET',
-        url: `https://api.moonpay.com/v1/transactions/${data.data.id}?apiKey=${process.env.MOONPAY_PUBLIC_KEY}`,
+        url: `https://api.moonpay.com/v1/transactions/${data.data.id}?apiKey=${MOONPAY_PUBLIC_KEY}`,
         headers: { accept: 'application/json' }
       };
       
