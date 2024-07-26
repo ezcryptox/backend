@@ -3,8 +3,7 @@
 const CryptoAsset = require('../model/cryptoasset');
 const tatumdocs = require('@api/tatumdocs');
 const axios = require('axios');
-const TATUM_API_KEY = "t-6699a7552d63e7001c92f4ce-f23285d7138e466d96ba13a1"; // TODO: Change to mainnet API KEY
-const TATUM_WEBHOOK_SECRET = "tatum_webhook_secret"; //TODO: Replace with actual Tatum webhook secret
+const { TATUM_API_KEY, TATUM_WEBHOOK_SECRET, APP_BASE_URL } = require('../utils/env');
 tatumdocs.auth(TATUM_API_KEY);
 async function getWalletAddressForAsset(crypto, user_id) {
   // Check if the wallet address exists in the CryptoAsset collection
@@ -218,7 +217,7 @@ async function getWalletAddress(req, res) {
 function validateTatumSignature(req) {
   const signature = req.headers['x-payload-hash'];
   const payload = JSON.stringify(req.body);
-  const hmac = crypto.createHmac('sha512', process.env.TATUM_WEBHOOK_SECRET);
+  const hmac = crypto.createHmac('sha512', TATUM_WEBHOOK_SECRET);
   hmac.update(payload);
   const digest = hmac.digest('base64');
   return signature === digest;
@@ -243,7 +242,7 @@ async function tatumWebHook(req, res) {
           url: `https://api.tatum.io/v3/ledger/account/${asset.tatumAccountID}/balance`,
           headers: {
             accept: 'application/json',
-            'x-api-key': process.env.TATUM_API_KEY
+            'x-api-key': TATUM_API_KEY
           }
         };
 
@@ -267,12 +266,12 @@ async function registerEvent(address, chain) {
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
-      'x-api-key': process.env.TATUM_API_KEY
+      'x-api-key': TATUM_API_KEY
     },
     data: {
       type: 'ADDRESS_EVENT', attr: {
         chain, address,
-        url: process.env.APP_BASE_URL } }
+        url: APP_BASE_URL } }
   };
 
   const {id} = (await axios.request(options)).data
@@ -286,9 +285,9 @@ async function signWebHook() {
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
-      'x-api-key': process.env.TATUM_API_KEY
+      'x-api-key': TATUM_API_KEY
     },
-    data: { hmacSecret: process.env.TATUM_WEBHOOK_SECRET }
+    data: { hmacSecret: TATUM_WEBHOOK_SECRET }
   };
 
   await axios.request(options)
