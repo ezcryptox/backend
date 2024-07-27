@@ -35,8 +35,8 @@ const handleLoginAuth = (async (req, res) => {
   if (!isMatch) {
     return res.status(401).json("Incorrect password");
   }
-  const Token = createToken(user.user_id);
-  res.status(200).json({ Token, user: { user_id: user.user_id, email: user.email } });
+  const token = createToken(user.user_id);
+  res.status(200).json({ token, user: { user_id: user.user_id, email: user.email } });
 });
 
 
