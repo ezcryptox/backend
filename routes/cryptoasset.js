@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { getWalletAddress, tatumWebHook, signWebHook } = require('../controllers/cryptoasset');
+const { getWalletAddress, tatumWebHook, signWebHook, getBalances } = require('../controllers/cryptoasset');
 const requireAuth = require('../middleware/requireAuth')
 
 router.get('/wallet-address', requireAuth, getWalletAddress);
+router.get('/wallet-balance', requireAuth, getBalances);
 router.post('/webhook', tatumWebHook)
 
 

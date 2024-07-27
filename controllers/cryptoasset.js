@@ -223,6 +223,28 @@ function validateTatumSignature(req) {
   return signature === digest;
 }
 
+async function getBalances(req, res) {
+  const user_id = req.id;
+  try {
+    const assets = await CryptoAsset.find({ user_id: user_id });
+    const balances = await Promise.all(assets.map(async (asset) => {
+      const options = {
+        method: 'GET',
+        url: `https://api.tatum.io/v3/ledger/account/${asset.tatumAccountID}/balance`,
+        headers: {
+          accept: 'application/json',
+          'x-api-key': TATUM_API_KEY
+        }
+      };
+      const { availableBalance } = (await axios.request(options)).data;
+      return { crypto: asset.currencyCode, balance: availableBalance };
+    }));
+    res.status(200).json({balances});
+  } catch (error) {
+    res.status(500).json({message: error.message})
+  }
+}
+
 // Webhook handler for Tatum notifications
 async function tatumWebHook(req, res) {
   if (!validateTatumSignature(req)) {
@@ -297,5 +319,6 @@ async function signWebHook() {
 module.exports = {
   getWalletAddress,
   tatumWebHook,
-  signWebHook
+  signWebHook,
+  getBalances
 };
