@@ -78,7 +78,7 @@ const handleCreateUserAuth = (async (req, res) => {
       let user_id = uniqueId()
       const salt = await bcrypt.genSalt(10)
       const hash = await bcrypt.hash(auth.user?.resent.password, salt)
-      const Token = createToken(user_id)
+      const token = createToken(user_id)
 
       const refCode = await utils.handleCreateReferralToken();
       const QrCode_src = await utils.generateQRCode(refCode);
@@ -118,7 +118,7 @@ const handleCreateUserAuth = (async (req, res) => {
         email: auth.user?.resent.email,
         level: 1,
       })
-      res.status(200).json({ Token, user: { user_id, QrCode_src,refCode, email: auth.user?.resent.email } })
+      res.status(200).json({ token, user: { user_id, QrCode_src,refCode, email: auth.user?.resent.email } })
     }
   }
 })
