@@ -1,6 +1,6 @@
 const axios = require('axios');
 const crypto = require('crypto');
-const {MOONPAY_PUBLIC_KEY, MOONPAY_SECRET_KEY} = require('../utils/env')
+const {MOONPAY_PUBLIC_KEY, MOONPAY_SECRET_KEY, MOONPAY_WEBHOOK_SECRET} = require('../utils/env')
 const CryptoBuyOrder = require('../model/crytobuyorder');
 const DEBUG = false;
 const ICONS = {
@@ -241,7 +241,7 @@ async function moonPayWebHook(req, res) {
 
     const signedPayload = `${timestamp}.${JSON.stringify(req.body)}`;
     const expectedSignature = crypto
-      .createHmac('sha256', MOONPAY_SECRET_KEY)
+      .createHmac('sha256', MOONPAY_WEBHOOK_SECRET)
       .update(signedPayload)
       .digest('hex');
 
